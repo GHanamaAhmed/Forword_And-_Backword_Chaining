@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "npx tailwindcss -i ./src/input.css -o ./dist/output.css - && electron ."
+    "start": "tsc src/renderer.ts --downlevelIteration && npx tailwindcss -i ./src/input.css -o ./dist/output.css - && electron ."
   },
   "author": "",
   "license": "ISC",

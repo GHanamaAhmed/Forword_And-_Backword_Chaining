@@ -234,16 +234,18 @@ function forwardChainBFS(
     ];
   }
   visited = [...visited, ...conflit.map((rule) => rule.toString())];
-  for (const rule of conflit) {
+  for (const [index, rule] of conflit.entries()) {
     if (!knowledgeBase.facts.includes(rule[rule?.length - 1])) {
       knowledgeBase.facts.push(rule[rule.length - 1]);
-      execution_steps.value += `étape ${etap}: conflit[`;
-      conflit.map((rule) => {
-        execution_steps.value += `${rule.slice(0, -1).toString()}=>${
-          rule[rule.length - 1]
-        },`;
-      });
-      execution_steps.value += "]\n";
+      if (index == 0) {
+        execution_steps.value += `étape ${etap}: conflit[`;
+        conflit.map((rule) => {
+          execution_steps.value += `${rule.slice(0, -1).toString()}=>${
+            rule[rule.length - 1]
+          },`;
+        });
+        execution_steps.value += "]\n";
+      }
       execution_steps.value +=
         "on choisit " +
         rule.slice(0, -1).toString() +

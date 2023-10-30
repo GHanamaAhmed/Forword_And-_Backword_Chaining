@@ -34,6 +34,22 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -42,6 +58,17 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         }
     }
     return to.concat(ar || Array.prototype.slice.call(from));
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var _this = this;
 var knowledgeStructureInput = document.getElementById("letters_between");
@@ -117,9 +144,9 @@ var fillKnowledgeBase = function () {
         .map(function (e) {
         if (!e)
             return;
-        knowledgeBase.rules.push(__spreadArray(__spreadArray([], e
+        knowledgeBase.rules.push(__spreadArray(__spreadArray([], __read(e
             .split(expressionSignInput.value)[0]
-            .split(knowledgeStructureInput.value), true), [
+            .split(knowledgeStructureInput.value)), false), [
             e.split(expressionSignInput.value)[1],
         ], false));
     });
@@ -155,12 +182,12 @@ execute_button.addEventListener("click", function () {
     }
 });
 function getRegleForword(visited) {
-    return __spreadArray([], knowledgeBase.rules.filter(function (rule) {
+    return __spreadArray([], __read(knowledgeBase.rules.filter(function (rule) {
         return (rule
             .slice(0, -1)
             .every(function (subRule) { return knowledgeBase.facts.includes(subRule); }) &&
             !visited.includes(rule.toString()));
-    }), true);
+    })), false);
 }
 var sleep = function (time) {
     if (time === void 0) { time = 1500; }
@@ -190,19 +217,19 @@ function forwardChainDFS(conflit, visited, etap) {
                         return [2 /*return*/];
                     }
                     if (algoOfConflit[0].checked) {
-                        conflit = __spreadArray(__spreadArray([], conflit, true), newRegle, true);
+                        conflit = __spreadArray(__spreadArray([], __read(conflit), false), __read(newRegle), false);
                     }
                     else if (algoOfConflit[1].checked) {
-                        conflit = __spreadArray(__spreadArray([], newRegle.reverse(), true), conflit, true);
+                        conflit = __spreadArray(__spreadArray([], __read(newRegle.reverse()), false), __read(conflit), false);
                     }
                     else {
                         // Handle other cases if needed
-                        conflit = __spreadArray([], knowledgeBase.rules.filter(function (rule) {
+                        conflit = __spreadArray([], __read(knowledgeBase.rules.filter(function (rule) {
                             return newRegle.findIndex(function (regle) { return regle.toString() == rule.toString(); }) >
                                 -1 || conflit.findIndex(function (r) { return rule.toString() == r.toString(); }) > -1;
-                        }), true);
+                        })), false);
                     }
-                    visited = __spreadArray(__spreadArray([], visited, true), conflit.map(function (rule) { return rule.toString(); }), true);
+                    visited = __spreadArray(__spreadArray([], __read(visited), false), __read(conflit.map(function (rule) { return rule.toString(); })), false);
                     if (!!knowledgeBase.facts.includes(conflit[0][((_a = conflit[0]) === null || _a === void 0 ? void 0 : _a.length) - 1])) return [3 /*break*/, 5];
                     if (!engine_speed[1].checked) return [3 /*break*/, 2];
                     return [4 /*yield*/, sleep(750)];
@@ -241,6 +268,7 @@ function forwardChainDFS(conflit, visited, etap) {
 }
 // Forward chaining algorithm with breadth-first search
 function forwardChainBFS(conflit, visited, etap) {
+    var e_1, _a;
     if (etap === void 0) { etap = 1; }
     // Implement BFS logic here
     if (knowledgeBase.facts.includes(goal)) {
@@ -252,27 +280,29 @@ function forwardChainBFS(conflit, visited, etap) {
         return;
     }
     if (algoOfConflit[0].checked) {
-        conflit = __spreadArray(__spreadArray([], conflit, true), newRegle, true);
+        conflit = __spreadArray(__spreadArray([], __read(conflit), false), __read(newRegle), false);
     }
     else if (algoOfConflit[1].checked) {
-        conflit = __spreadArray(__spreadArray([], newRegle.reverse(), true), conflit, true);
+        conflit = __spreadArray(__spreadArray([], __read(newRegle.reverse()), false), __read(conflit), false);
     }
     else {
         // Handle other cases if needed
-        conflit = __spreadArray([], knowledgeBase.rules.filter(function (rule) {
+        conflit = __spreadArray([], __read(knowledgeBase.rules.filter(function (rule) {
             return newRegle.findIndex(function (regle) { return regle.toString() == rule.toString(); }) >
                 -1 || conflit.findIndex(function (r) { return rule.toString() == r.toString(); }) > -1;
-        }), true);
+        })), false);
     }
-    visited = __spreadArray(__spreadArray([], visited, true), conflit.map(function (rule) { return rule.toString(); }), true);
-    var _loop_1 = function (rule) {
+    visited = __spreadArray(__spreadArray([], __read(visited), false), __read(conflit.map(function (rule) { return rule.toString(); })), false);
+    var _loop_1 = function (index, rule) {
         if (!knowledgeBase.facts.includes(rule[(rule === null || rule === void 0 ? void 0 : rule.length) - 1])) {
             knowledgeBase.facts.push(rule[rule.length - 1]);
-            execution_steps.value += "\u00E9tape ".concat(etap, ": conflit[");
-            conflit.map(function (rule) {
-                execution_steps.value += "".concat(rule.slice(0, -1).toString(), "=>").concat(rule[rule.length - 1], ",");
-            });
-            execution_steps.value += "]\n";
+            if (index == 0) {
+                execution_steps.value += "\u00E9tape ".concat(etap, ": conflit[");
+                conflit.map(function (rule) {
+                    execution_steps.value += "".concat(rule.slice(0, -1).toString(), "=>").concat(rule[rule.length - 1], ",");
+                });
+                execution_steps.value += "]\n";
+            }
             execution_steps.value +=
                 "on choisit " +
                     rule.slice(0, -1).toString() +
@@ -283,9 +313,18 @@ function forwardChainBFS(conflit, visited, etap) {
         }
         knowledgeBase.rules = knowledgeBase.rules.filter(function (r) { return r.toString() != rule.toString(); });
     };
-    for (var _i = 0, conflit_1 = conflit; _i < conflit_1.length; _i++) {
-        var rule = conflit_1[_i];
-        _loop_1(rule);
+    try {
+        for (var _b = __values(conflit.entries()), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var _d = __read(_c.value, 2), index = _d[0], rule = _d[1];
+            _loop_1(index, rule);
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        }
+        finally { if (e_1) throw e_1.error; }
     }
     conflit = [];
     forwardChainBFS(conflit, visited, etap + 1);
@@ -298,6 +337,7 @@ function backwardChainBFS(kb, goal) {
     // Implement backward chaining with BFS logic here
 }
 function backwardChainDFS(char) {
+    var e_2, _a;
     // Implement backward chaining with DFS logic here
     if (knowledgeBase.facts.includes(char))
         return true;
@@ -314,11 +354,20 @@ function backwardChainDFS(char) {
         }))
             return { value: true };
     };
-    for (var _i = 0, conflit_2 = conflit; _i < conflit_2.length; _i++) {
-        var rule = conflit_2[_i];
-        var state_1 = _loop_2(rule);
-        if (typeof state_1 === "object")
-            return state_1.value;
+    try {
+        for (var conflit_1 = __values(conflit), conflit_1_1 = conflit_1.next(); !conflit_1_1.done; conflit_1_1 = conflit_1.next()) {
+            var rule = conflit_1_1.value;
+            var state_1 = _loop_2(rule);
+            if (typeof state_1 === "object")
+                return state_1.value;
+        }
+    }
+    catch (e_2_1) { e_2 = { error: e_2_1 }; }
+    finally {
+        try {
+            if (conflit_1_1 && !conflit_1_1.done && (_a = conflit_1.return)) _a.call(conflit_1);
+        }
+        finally { if (e_2) throw e_2.error; }
     }
     return false;
 }
