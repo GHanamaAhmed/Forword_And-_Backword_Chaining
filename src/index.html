@@ -1,0 +1,203 @@
+<!--index.html-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <link href="../dist/output.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./input.css" />
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <!-- component -->
+    <div
+      id="divSetting"
+      class="min-h-screen p-6 bg-gray-100 flex items-center justify-center"
+    >
+      <div class="container max-w-screen-lg mx-auto">
+        <div>
+          <h2 class="font-semibold text-xl text-gray-600">System Expert</h2>
+          <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+            <div class="grid gap-4 gap-y-2 text-sm grid-cols-1 lg:grid-cols-3">
+              <div class="text-gray-600">
+                <p class="font-medium text-lg">Settings</p>
+                <p>Please fill out the form below.</p>
+              </div>
+
+              <div class="lg:col-span-2">
+                <form action="process_settings.php" method="post">
+                  <!-- Knowledge Base Structure -->
+                  <div
+                    class="grid gap-4 gap-y-2 text-sm grid-cols-1 md:grid-cols-2"
+                  >
+                    <div>
+                      <label for="letters_between">Letters Between:</label>
+                      <input
+                        type="text"
+                        name="letters_between"
+                        id="letters_between"
+                        class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        value=""
+                        placeholder="e.g., a, b, c"
+                      />
+                    </div>
+                    <div>
+                      <label for="expression_sign">Expression Sign:</label>
+                      <input
+                        type="text"
+                        name="expression_sign"
+                        id="expression_sign"
+                        class="h-10 border mt-1 rounded px-4 w-full bg-gray-50"
+                        value=""
+                        placeholder="e.g., =>"
+                      />
+                    </div>
+                  </div>
+                  <!-- Inference Engine Speed Selection -->
+                  <label>Engine Speed Selection:</label><br />
+                  <input
+                    type="radio"
+                    id="engine_fast"
+                    name="engine_speed"
+                    value="fast"
+                  />
+                  Fast
+                  <input
+                    type="radio"
+                    id="engine_Medium"
+                    name="engine_speed"
+                    value="medium"
+                  />
+                  Medium
+                  <input
+                    type="radio"
+                    id="engine_slow"
+                    name="engine_speed"
+                    value="slow"
+                  />
+                  Slow<br />
+
+                  <!-- Tree Traversal Strategy -->
+                  <label>Tree Traversal Strategy:</label><br />
+                  <input
+                    type="radio"
+                    id="avant"
+                    name="tree_traversal"
+                    value="avant"
+                  />
+                  avant
+                  <input
+                    type="radio"
+                    id="arrier"
+                    name="tree_traversal"
+                    value="arrier"
+                  />
+                  arrier <br />
+
+                  <!-- Additional Functions -->
+                  <label>TAdditional Functions:</label><br />
+                  <input
+                    type="radio"
+                    id="depth_first"
+                    name="tree_traversal2"
+                    value="depth_first"
+                  />
+                  Depth-First
+                  <input
+                    type="radio"
+                    id="breadth_first"
+                    name="tree_traversal2"
+                    value="breadth_first"
+                  />
+                  Breadth-First<br />
+                  <!-- Additional Functions -->
+                  <label>mecanisme resoulotion de confilt:</label><br />
+                  <input
+                    type="radio"
+                    id="fifo"
+                    name="conflit"
+                    value="fifo"
+                  />
+                  FIFO
+                  <input
+                    type="radio"
+                    id="lifo"
+                    name="conflit"
+                    value="lifo"
+                  />
+                  LIFO
+                  <input
+                    type="radio"
+                    id="Order"
+                    name="conflit"
+                    value="order"
+                  />
+                  Order of rules<br />
+                  <label for="knowledge_base_file">Knowledge Base File:</label>
+                  <input
+                    type="file"
+                    name="knowledge_base_file"
+                    id="knowledge_base_file"
+                    class="h-10 mt-1 w-full"
+                    accept=".txt, .csv, .xml"
+                  />
+
+                  <!-- Submit Button -->
+                  <div class="text-right mt-4">
+                    <button
+                      class="bg-blue-500 next hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="divExecute" class="container max-w-screen-lg mx-auto hidden">
+      <div>
+        <h2 class="font-semibold text-xl text-gray-600">Execution</h2>
+        <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+          <div class="grid gap-4 text-sm grid-cols-1">
+            <label for="knowledge_base_text">Knowledge Base:</label>
+            <textarea
+              id="knowledge_base_text"
+              class="h-32 border mt-1 rounded px-4 w-full bg-gray-50"
+              placeholder="Enter the knowledge base here"
+            ></textarea>
+
+            <button
+              id="execute_button"
+              class="bg-blue-500 hover-bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Execute
+            </button>
+
+            <label for="execution_steps">Execution Steps:</label>
+            <textarea
+              id="execution_steps"
+              class="h-32 border mt-1 rounded px-4 w-full bg-gray-50"
+              placeholder="Execution steps will be shown here"
+              readonly
+            ></textarea>
+            <div class="text-right mt-4">
+              <button
+                class="bg-blue-500 next hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
