@@ -126,7 +126,7 @@ execute_button.addEventListener("click", () => {
       backwardChainDFS(goal);
     } else {
       console.log("lA");
-      backwardChainBFS(knowledgeBase, goal);
+      // backwardChainBFS(knowledgeBase, goal);
       // arrière avec largeur
     }
   }
@@ -267,8 +267,37 @@ function getRegleBackward(char: string): string[][] {
   );
   return result;
 }
-function backwardChainBFS(kb: any, goal: string) {
-  // Implement backward chaining with BFS logic here
+function getRegleBackwardBFS(chars: string[]): string[][][] {
+  return chars.map((char) =>
+    knowledgeBase.rules.filter((rule) => rule[rule.length - 1] == char)
+  );
+}
+function backwardChainBFS(chars: string[]): boolean {
+  // Implement backward chaining with DFS logic here
+  const chars2 = chars.filter((char) => knowledgeBase.facts.includes(char));
+  if (chars2.length == chars.length) {
+    return true;
+  }
+  chars = chars.filter((char) => !knowledgeBase.facts.includes(char));
+  // if (chars.length == 0) {
+  // return false;
+  //}
+  let conflit = getRegleBackwardBFS(chars);
+  if (conflit.length == 0) return false;
+  conflit.every((rules) => {
+    for (const rule of rules) {
+      let ldp = rule.filter((r, i) => i + 1 != rule.length);
+      if (
+        ldp.every((c) => {
+          if (knowledgeBase.facts.includes(c)) return true;
+          return backwardChainDFS(c);
+        })
+      )
+        return true;
+    }
+  });
+
+  return false;
 }
 
 function backwardChainDFS(char: string): boolean {

@@ -176,7 +176,7 @@ execute_button.addEventListener("click", function () {
         }
         else {
             console.log("lA");
-            backwardChainBFS(knowledgeBase, goal);
+            // backwardChainBFS(knowledgeBase, goal);
             // arrière avec largeur
         }
     }
@@ -333,9 +333,29 @@ function getRegleBackward(char) {
     var result = knowledgeBase.rules.filter(function (rule) { return rule[rule.length - 1] == char; });
     return result;
 }
-function backwardChainBFS(kb, goal) {
-    // Implement backward chaining with BFS logic here
+function getRegleBackwardBFS(chars) {
+    return chars.map(function (char) {
+        return knowledgeBase.rules.filter(function (rule) { return rule[rule.length - 1] == char; });
+    });
 }
+// function backwardChainBFS(char: string[]): boolean {
+//   // Implement backward chaining with DFS logic here
+//   if (knowledgeBase.facts.includes(char)) return true;
+//   let conflit = getRegleBackwardBFS(char);
+//   if (conflit.length == 0) return false;
+//   for (const rule of conflit) {
+//     let ldp = rule.filter((r, i) => i + 1 != rule.length);
+//     printBackword(conflit, ldp);
+//     if (
+//       ldp.every((c) => {
+//         if (knowledgeBase.facts.includes(c)) return true;
+//         return backwardChainDFS(c);
+//       })
+//     )
+//       return true;
+//   }
+//   return false;
+// }
 function backwardChainDFS(char) {
     var e_2, _a;
     // Implement backward chaining with DFS logic here
