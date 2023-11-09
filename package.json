@@ -4,11 +4,13 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "tsc src/renderer.ts --downlevelIteration && npx tailwindcss -i ./src/input.css -o ./dist/output.css - && electron ."
+    "start": "tsc -p tsconfig.json --downlevelIteration && npx tailwindcss -i ./src/input.css -o ./dist/output.css - && electron . --no-sandbox"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "tailwindcss": "^3.3.5"
+    "electron": "^27.0.4",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2"
   }
 }
