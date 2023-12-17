@@ -6,6 +6,8 @@ const expressionSignInput = document.getElementById(
 ) as HTMLInputElement;
 const divSetting = document.getElementById("divSetting") as HTMLElement;
 const divExecute = document.getElementById("divExecute") as HTMLElement;
+const warring = document.getElementById("warring") as HTMLElement;
+const warringText = document.getElementById("warring-text") as HTMLElement;
 const next = document.getElementsByClassName(
   "next"
 ) as HTMLCollectionOf<HTMLElement>;
@@ -42,7 +44,7 @@ let goal: string;
 // Set default values for the inputs
 knowledgeStructureInput.value = ",";
 expressionSignInput.value = "=>";
-
+warring.classList.add("hidden");
 // Set default values for radio buttons
 (document.getElementById("avant") as HTMLInputElement).checked = true;
 (document.getElementById("depth_first") as HTMLInputElement).checked = true;
@@ -78,10 +80,60 @@ knowledge_base_file.addEventListener("change", (e) => {
     knowledge_base_text.value = (fileReader.result as string).trim();
   });
 });
+function checkFormat(input: string) {
+  if (!input.includes("but")) {
+    if (warring.classList.contains("hidden")) {
+      warring.classList.remove("hidden");
+    }
+    warringText.innerHTML = "add but";
+  }
+  const lines = input.split("\n");
+  if (!/^[a-zA-Z](,[a-zA-Z])*$/.test(lines[0])) {
+    if (warring.classList.contains("hidden")) {
+      warring.classList.remove("hidden");
+    }
+    warringText.innerHTML = "you forgot bf";
+    return false;
+  }
+  if (lines[1] !== "br") {
+    if (warring.classList.contains("hidden")) {
+      warring.classList.remove("hidden");
+    }
+    warringText.innerHTML = "you forgot br";
+    return false;
+  }
+
+  for (let i = 2; i < lines.length; i++) {
+    if (lines[i] === "but") {
+      if (i === lines.length - 2) {
+        if (!warring.classList.contains("hidden")) {
+          warring.classList.add("hidden");
+        }
+        return true;
+      } else {
+        if (warring.classList.contains("hidden")) {
+          warring.classList.remove("hidden");
+        }
+        warringText.innerHTML = "add but";
+        return false;
+      }
+    } else if (!/^[a-zA-Z](,[a-zA-Z])*=>[a-zA-Z]$/.test(lines[i])) {
+      if (warring.classList.contains("hidden")) {
+        warring.classList.remove("hidden");
+      }
+      warringText.innerHTML =
+        "you should write it in the standard format ex : a=>b";
+      return false;
+    }
+  }
+  return false;
+}
 
 const fillKnowledgeBase = () => {
   knowledgeBase.facts = [];
   knowledgeBase.rules = [];
+  checkFormat(knowledge_base_text.value);
+
   const newB = knowledge_base_text.value
     .split("but")[0]
     .replace("bf", "")
@@ -126,7 +178,7 @@ execute_button.addEventListener("click", () => {
       backwardChainDFS(goal);
     } else {
       console.log("lA");
-      // backwardChainBFS(knowledgeBase, goal);
+      backwardChainBFS([goal]);
       // arrière avec largeur
     }
   }
@@ -205,7 +257,7 @@ async function forwardChainDFS(
 }
 
 // Forward chaining algorithm with breadth-first search
-function forwardChainBFS(
+async function forwardChainBFS(
   conflit: string[][],
   visited: string[],
   etap: number = 1
@@ -238,6 +290,11 @@ function forwardChainBFS(
     if (!knowledgeBase.facts.includes(rule[rule?.length - 1])) {
       knowledgeBase.facts.push(rule[rule.length - 1]);
       if (index == 0) {
+        if (engine_speed[1].checked) {
+          await sleep(750);
+        } else if (engine_speed[2].checked) {
+          await sleep();
+        }
         execution_steps.value += `étape ${etap}: conflit[`;
         conflit.map((rule) => {
           execution_steps.value += `${rule.slice(0, -1).toString()}=>${
@@ -258,7 +315,7 @@ function forwardChainBFS(
       (r) => r.toString() != rule.toString()
     );
   }
-  conflit = [];
+  conflit = []
   forwardChainBFS(conflit, visited, etap + 1);
 }
 function getRegleBackward(char: string): string[][] {
@@ -272,41 +329,52 @@ function getRegleBackwardBFS(chars: string[]): string[][][] {
     knowledgeBase.rules.filter((rule) => rule[rule.length - 1] == char)
   );
 }
-function backwardChainBFS(chars: string[]): boolean {
+async function backwardChainBFS(chars: string[]): Promise<boolean> {
   // Implement backward chaining with DFS logic here
   const chars2 = chars.filter((char) => knowledgeBase.facts.includes(char));
   if (chars2.length == chars.length) {
     return true;
   }
   chars = chars.filter((char) => !knowledgeBase.facts.includes(char));
-  // if (chars.length == 0) {
-  // return false;
-  //}
   let conflit = getRegleBackwardBFS(chars);
   if (conflit.length == 0) return false;
-  conflit.every((rules) => {
+  return conflit.every(async (rules) => {
+    let ldps: string[][] = [];
     for (const rule of rules) {
-      let ldp = rule.filter((r, i) => i + 1 != rule.length);
-      if (
-        ldp.every((c) => {
-          if (knowledgeBase.facts.includes(c)) return true;
-          return backwardChainDFS(c);
-        })
-      )
-        return true;
+      ldps = [...ldps, rule.filter((r, i) => i + 1 != rule.length)];
     }
+    if (
+      ldps.findIndex(async (c) => {
+        if (engine_speed[1].checked) {
+          await sleep(750);
+        } else if (engine_speed[2].checked) {
+          await sleep();
+        }
+        printBackwordBFS(conflit, c);
+        return c.every((char) => {
+          if (knowledgeBase.facts.includes(char)) {
+            return true;
+          }
+          return backwardChainBFS(c);
+        });
+      }) >= 0
+    )
+      return true;
   });
-
-  return false;
 }
 
-function backwardChainDFS(char: string): boolean {
+async function backwardChainDFS(char: string): Promise<boolean> {
   // Implement backward chaining with DFS logic here
   if (knowledgeBase.facts.includes(char)) return true;
   let conflit = getRegleBackward(char);
   if (conflit.length == 0) return false;
   for (const rule of conflit) {
     let ldp = rule.filter((r, i) => i + 1 != rule.length);
+    if (engine_speed[1].checked) {
+      await sleep(750);
+    } else if (engine_speed[2].checked) {
+      await sleep();
+    }
     printBackword(conflit, ldp);
     if (
       ldp.every((c) => {
@@ -324,6 +392,22 @@ const printBackword = (conflit: string[][], ldp: string[], etap?: number) => {
     execution_steps.value += `${rule.slice(0, -1).toString()}=>${
       rule[rule.length - 1]
     },`;
+  });
+  execution_steps.value += "]\n";
+  execution_steps.value += `ldp=[${ldp.toString()}]\n`;
+};
+const printBackwordBFS = (
+  conflit: string[][][],
+  ldp: string[],
+  etap?: number
+) => {
+  execution_steps.value += `étape : conflit[`;
+  conflit.map((rules) => {
+    rules.map((rule) => {
+      execution_steps.value += `${rule.slice(0, -1).toString()}=>${
+        rule[rule.length - 1]
+      },`;
+    });
   });
   execution_steps.value += "]\n";
   execution_steps.value += `ldp=[${ldp.toString()}]\n`;

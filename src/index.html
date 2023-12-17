@@ -116,26 +116,11 @@
                   Breadth-First<br />
                   <!-- Additional Functions -->
                   <label>mecanisme resoulotion de confilt:</label><br />
-                  <input
-                    type="radio"
-                    id="fifo"
-                    name="conflit"
-                    value="fifo"
-                  />
+                  <input type="radio" id="fifo" name="conflit" value="fifo" />
                   FIFO
-                  <input
-                    type="radio"
-                    id="lifo"
-                    name="conflit"
-                    value="lifo"
-                  />
+                  <input type="radio" id="lifo" name="conflit" value="lifo" />
                   LIFO
-                  <input
-                    type="radio"
-                    id="Order"
-                    name="conflit"
-                    value="order"
-                  />
+                  <input type="radio" id="Order" name="conflit" value="order" />
                   Order of rules<br />
                   <label for="knowledge_base_file">Knowledge Base File:</label>
                   <input
@@ -165,6 +150,16 @@
       <div>
         <h2 class="font-semibold text-xl text-gray-600">Execution</h2>
         <div class="bg-white rounded shadow-lg p-4 px-4 md:p-8 mb-6">
+          <div class="w-full flex justify-center">
+            <div
+              id="warring"
+              class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4"
+              role="alert"
+            >
+              <p class="font-bold">warring</p>
+              <p id="warring-text"></p>
+            </div>
+          </div>
           <div class="grid gap-4 text-sm grid-cols-1">
             <label for="knowledge_base_text">Knowledge Base:</label>
             <textarea
